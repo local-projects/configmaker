@@ -1,0 +1,4 @@
+configmaker
+===========
+
+Configurations creator
