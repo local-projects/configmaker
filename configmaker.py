@@ -41,6 +41,7 @@ def extract_configs(config_file, rc_file, config_template):
         rckeys = kv_from_file(rc_file)
     
     print ("Assign values to the different variables. \n"
+           "Values may be blank (just hit enter). Booleans must be True/False \n"
            "These will be written out to %s and the configuration file will be %s" %
            (rc_file, config_file))
     
@@ -80,18 +81,26 @@ if __name__ == "__main__":
     # If the rcfile already exists, use it as the starting point, and append
     while not options.rc_file: 
         ans = raw_input("Full path to rcfile to save to: ")
-        if os.path.exists(os.path.expanduser(ans).split()[0]):
+        ans = ans.strip()
+
+        path = os.path.split(os.path.expanduser(ans))[0]
+        if os.path.exists(os.path.expanduser(path)):
             options.rc_file = ans
             break
+        else:
+            print("Path %s does not exist. Please create it before proceeding, or provide new path." % path)
         
     while not options.config_file:
-        ans = raw_input("Config.yml to save to: ")
-        if os.path.exists(os.path.expanduser(ans).split()[0]):
+        ans = raw_input("Full path to config.yml to save to: ")
+        path = os.path.split(os.path.expanduser(ans))[0]
+        if os.path.exists(path):
             options.config_file = ans
             break
+        else:
+            print("Path %s does not exist. Please create it before proceeding, or provide new path." % path)
 
     if os.path.exists(os.path.expanduser(options.config_file)):
-        ans = raw_input("Will delete and replace config file %s. Ok? [y/n] " % options.config_file)
+        ans = raw_input("File %s already exists. Will delete and replace file. Ok? [y/n] " % options.config_file)
         if not ans.lower().startswith("y"):
             print "Please use a different target config file."
             exit(1)
